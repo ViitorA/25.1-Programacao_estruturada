@@ -27,23 +27,24 @@
 #include <stdio.h>
 #include <math.h>
 
-int tamanho(int n);
-int contaValidos(int n, int m);
-int repetido(float n);
+long tamanho(long n);
+long contaValidos(long n, long m);
+int repetido(double n);
 
 int main()
 {
-	int n,m;
-	scanf("%d %d", &n, &m);
+	long n,m;
 	
-	printf("%d", contaValidos(n, m));
+	while(scanf("%ld %ld", &n, &m) == 2) {
+		printf("%ld\n", contaValidos(n, m));
+	}
 
 	return 0;
 }
 
-int tamanho(int n)
+long tamanho(long n)
 {
-	int i = 0;
+	long i = 0;
 
 	while(n > 0.9) {
 		n /= 10;
@@ -53,9 +54,9 @@ int tamanho(int n)
 	return i;
 }
 
-int contaValidos(int n, int m)
+long contaValidos(long n, long m)
 {
-	int validos = 0;
+	long validos = 0;
 
 	while(n <= m) {
 		if (!repetido(n)) validos++;
@@ -66,22 +67,22 @@ int contaValidos(int n, int m)
 	return validos;
 }
 
-int repetido(float n)
+int repetido(double n)
 {
 	const float NUM_ORIGINAL = n;
-	int contadorRepeticoes = 0;
+	long contadorRepeticoes = 0;
 		
 
 	// Testa todos os dígitos de 0 a 9
 	for(int digito = 0; digito < 10; digito++) {
-		for(float i = tamanho(n); i > 0; i--) {
+		for(double i = tamanho(n); i > 0; i--) {
 			// Seja n = 1004
 			
 			// 100.4
 			n /= 10;
 
 			// j = (100.4 - 100) = 0.4
-			float j = (n - (int)n);
+			double j = (n - (long)n);
 
 			// n = 100.4 - 0.4 = 100
 			n -= j;

@@ -34,10 +34,12 @@ typedef struct Aluno { // Usamos typedef aqui para evitar ter que escrever struc
 
 // Passagem de tipo estruturado p/a função
 // Caso tivesse usado o typedef: float distancia(Ponto *p, Ponto *q);
-float distancia(struct Ponto p, struct Ponto q);
+float distancia(struct Ponto p, struct Ponto q) {
+	float dist = sqrt( (p.x - q.x)*(p.x - q.x) + (p.y - q.y)*(p.y - q.y) );
+	return dist;
+}
 
-int main()
-{
+int main() {
 	p_int npi = malloc(sizeof(int));
 	*npi = 25;
 	printf("%p -> %d\n", npi, *npi);
@@ -54,11 +56,13 @@ int main()
 	puts("Digite as coordenadas do ponto 1: ");
 	scanf("%f %f", &p1.x, &p1.y);
 	printf("O ponto fornecido foi: (%.1f,%.1f)\n", p1.x, p1.y);		
+
 	puts("Digite as coordenadas do ponto 2: ");
 	scanf("%f %f", &p2.x, &p2.y);
 	printf("O ponto fornecido foi: (%.1f,%.1f)\n", p2.x, p2.y);
-	float distancia = distancia(p1, p2);
-	printf("A distância entre esses pontos é: %.2f\n", distancia); 
+
+	float dist = distancia(p1, p2);
+	printf("A distância entre esses pontos é: %.2f\n", dist); 
 
 // Ponteiro p/a estrutura
 	// 1. Declara o ponteiro
@@ -87,10 +91,3 @@ int main()
 	return 0;
 }
 
-float distancia(struct Ponto p, struct Ponto q)
-{
-	float dist;
-	dist = sqrt( (p->x - q->x)*(p->x - q->x) + (p->y - q->y)*(p->y - q->y) );
-	return dist;
-
-}

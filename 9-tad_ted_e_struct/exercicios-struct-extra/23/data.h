@@ -2,7 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct dma;
+struct dma {
+	int dia;
+	int mes;
+	int ano;
+};
 
 struct dma *criar_struct_data();
 

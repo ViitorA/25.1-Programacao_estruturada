@@ -8,6 +8,8 @@ typedef struct aniversario Aniversario;
 
 typedef struct pessoa Pessoa;
 
+// Limpa o buffer
+void limpar_buffer();
 
 Pessoa *criar_agenda(int size);
 

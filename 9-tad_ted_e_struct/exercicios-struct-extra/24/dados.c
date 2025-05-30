@@ -40,6 +40,10 @@ typedef struct pessoa {
 } Pessoa;
 
 
+void limpar_buffer() {
+	while (getchar() != '\n');
+}
+
 Pessoa *criar_agenda(int size) {
 	Pessoa *agenda = (Pessoa*) malloc(sizeof(Pessoa)*size);
 	
@@ -52,17 +56,19 @@ Pessoa *criar_agenda(int size) {
 }
 
 void imprimir_dados(Pessoa pessoa) {
+	// Obs.: Em alguns eu não uso \n porque eu creio que seja por causa do fgets que ele já insere \n
 	printf("====================\n");
-	printf("Nome: %s\n", pessoa.nome);
+	printf("Nome: %s", pessoa.nome);
 	printf("E-Mail: %s\n", pessoa.email);
 	printf("Endereço: \n");
 		printf("\tCEP: %s\n", pessoa.endereco.cep);
-		printf("\tRua: %s, num. %d\n", pessoa.endereco.rua, pessoa.endereco.numero);
-		printf("\tComplemento: %s\n", pessoa.endereco.complemento);
-		printf("\tBairro: %s\n", pessoa.endereco.bairro);
-		printf("\tCidade: %s\n", pessoa.endereco.cidade);
-		printf("\tEstado: %s\n", pessoa.endereco.estado);
-		printf("\tPaís: %s\n\n", pessoa.endereco.pais);
+		printf("\tRua: %s", pessoa.endereco.rua);
+		printf("\tNúmero: %d\n", pessoa.endereco.numero);
+		printf("\tComplemento: %s", pessoa.endereco.complemento);
+		printf("\tBairro: %s", pessoa.endereco.bairro);
+		printf("\tCidade: %s", pessoa.endereco.cidade);
+		printf("\tEstado: %s", pessoa.endereco.estado);
+		printf("\tPaís: %s\n", pessoa.endereco.pais);
 	printf("Número de Telefone: %s %s\n", pessoa.telefone.ddd, pessoa.telefone.numero);
 	printf("Aniversário: %d/%d/%d\n", pessoa.aniversario.dia, pessoa.aniversario.mes, pessoa.aniversario.ano);
 	printf("Observações: %s\n", pessoa.observacoes);
@@ -70,9 +76,13 @@ void imprimir_dados(Pessoa pessoa) {
 }
 
 void imprimir_agenda_parcialmente(Pessoa *agenda, int qtd_pessoas) {
+	limpar_buffer();
+
 	for (int i = 0; i < qtd_pessoas; i++) {
-		printf("====================\n");
-		printf("Nome: %s\n", agenda[i].nome);
+		if(i == 0) { 
+			printf("====================\n");
+		}
+		printf("Nome: %s", agenda[i].nome);
 		printf("E-Mail: %s\n", agenda[i].email);
 		printf("Número de Telefone: %s %s\n", agenda[i].telefone.ddd, agenda[i].telefone.numero);
 		printf("====================\n");
@@ -109,17 +119,20 @@ void buscar_dia_mes(int dia, int mes, Pessoa *agenda) {
 	}
 }
 
+
 void inserir_pessoa(Pessoa *agenda, int *qtd_pessoas) {
-	String nome;
+	String usr_input;
+	
+	limpar_buffer();
 
 	puts("Inserir nome: ");
-	scanf("%s", nome);	
+	fgets(usr_input, sizeof(usr_input), stdin);
 	
 	int posicao = *qtd_pessoas; // Assume que será inserido no final
 
 	// Verifica onde inserir
 	for (int i = 0; i < *qtd_pessoas; i++) {
-		if( strcmp(nome, agenda[i].nome) < 0 ) { 
+		if( strcmp(usr_input, agenda[i].nome) < 0 ) { 
 			posicao = i;
 			break;	
 		}	
@@ -129,53 +142,49 @@ void inserir_pessoa(Pessoa *agenda, int *qtd_pessoas) {
 		agenda[i] = agenda[i - 1]; // desloca os nomes posteriores para a direita
 	}
 	
-	strcpy(agenda[posicao].nome, nome);
+	strcpy(agenda[posicao].nome, usr_input);
 
 	puts("Inserir E-Mail: ");
 	scanf("%s", agenda[posicao].email);
 
 	puts("Inserir CEP: ");
 	scanf("%s", agenda[posicao].endereco.cep);
-
+	
+	limpar_buffer();
 	puts("Inserir Rua: ");
-	scanf("%s", agenda[posicao].endereco.rua);
+	fgets(agenda[posicao].endereco.rua, sizeof(String), stdin);
 
 	puts("Inserir número: ");
 	scanf("%d", &agenda[posicao].endereco.numero);
-
+	
+	limpar_buffer();
 	puts("Inserir complemento: ");
-	scanf("%s", agenda[posicao].endereco.complemento);
+	fgets(agenda[posicao].endereco.complemento, sizeof(String), stdin);
 
 	puts("Inserir bairro: ");
-	scanf("%s", agenda[posicao].endereco.bairro);
-
+	fgets(agenda[posicao].endereco.bairro, sizeof(String), stdin);
+	
 	puts("Inserir cidade: ");
-	scanf("%s", agenda[posicao].endereco.cidade);
-
+	fgets(agenda[posicao].endereco.cidade, sizeof(String), stdin);
+	
 	puts("Inserir estado: ");
-	scanf("%s", agenda[posicao].endereco.estado);
+	fgets(agenda[posicao].endereco.estado, sizeof(String), stdin);
 
 	puts("Inserir País: ");
-	scanf("%s", agenda[posicao].endereco.pais);
-
-	// Limpa o buffer
-	while (getchar() != '\n');
+	fgets(agenda[posicao].endereco.pais, sizeof(String), stdin);
 
 	puts("Insira o número de telefone no formato \"dd nnnnnnnnn\"");
 	char telefone_str[12];
 	fgets(telefone_str, sizeof(telefone_str), stdin);
 	sscanf(telefone_str, "%2s %9s", agenda[posicao].telefone.ddd, agenda[posicao].telefone.numero);
 
-	// Limpa o buffer
-	while (getchar() != '\n');
-		
+	limpar_buffer();
 	puts("Insira o aniversário no formado DD/MM/AAAA: ");
 	scanf("%d/%d/%d", &agenda[posicao].aniversario.dia, &agenda[posicao].aniversario.mes, &agenda[posicao].aniversario.ano);
 
-
-	// Depois arrumar para poder aceitar nenhuma observação
+	limpar_buffer();
 	puts("Insira alguma observação especial: ");
-	scanf("%s", agenda[posicao].observacoes);
+	fgets(agenda[posicao].observacoes, sizeof(String), stdin);
 
 	*qtd_pessoas += 1;
 }
@@ -192,14 +201,12 @@ void remover_pessoa(Pessoa *agenda, int *qtd_pessoas, char *nome) {
 
 	if (posicao == -1) {
 		puts("Pessoa não encontrada na agenda!");
-		return;
-	}
-
+	} else {
+		// Desloca os elementos p/a a esquerda
+		for( int i = posicao; i < (*qtd_pessoas) - 1; i++) {
+			agenda[i] = agenda[i + 1];
+		}
 		
-	// Desloca os elementos p/a a esquerda
-	for( int i = posicao; i < (*qtd_pessoas) - 1; i++) {
-		agenda[i] = agenda[i + 1];
+		*qtd_pessoas -= 1;
 	}
-	
-	*qtd_pessoas -= 1;
 }

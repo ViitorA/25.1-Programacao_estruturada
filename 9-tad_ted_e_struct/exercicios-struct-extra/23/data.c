@@ -3,12 +3,6 @@
 #include <stdlib.h>
 #include <math.h>
 
-struct dma {
-	int dia;
-	int mes;
-	int ano;
-};
-
 struct dma *criar_struct_data() {
 	struct dma *data = (struct dma*) malloc(sizeof(struct dma));
 

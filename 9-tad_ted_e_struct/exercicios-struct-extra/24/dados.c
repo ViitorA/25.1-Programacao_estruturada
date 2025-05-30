@@ -109,7 +109,6 @@ void buscar_dia_mes(int dia, int mes, Pessoa *agenda) {
 	}
 }
 
-/* TODO: inserir em ordem alfabética */
 void inserir_pessoa(Pessoa *agenda, int *qtd_pessoas) {
 	String nome;
 
@@ -118,7 +117,7 @@ void inserir_pessoa(Pessoa *agenda, int *qtd_pessoas) {
 	
 	int posicao = *qtd_pessoas; // Assume que será inserido no final
 
-	// Verificar onde inserir
+	// Verifica onde inserir
 	for (int i = 0; i < *qtd_pessoas; i++) {
 		if( strcmp(nome, agenda[i].nome) < 0 ) { 
 			posicao = i;
@@ -178,7 +177,7 @@ void inserir_pessoa(Pessoa *agenda, int *qtd_pessoas) {
 	puts("Insira alguma observação especial: ");
 	scanf("%s", agenda[posicao].observacoes);
 
-	*qtd_pessoas += 1; // Fala que foi adicionado mais uma pessoa
+	*qtd_pessoas += 1;
 }
 
 void remover_pessoa(Pessoa *agenda, int *qtd_pessoas, char *nome) {
@@ -202,7 +201,5 @@ void remover_pessoa(Pessoa *agenda, int *qtd_pessoas, char *nome) {
 		agenda[i] = agenda[i + 1];
 	}
 	
-	// To assumindo que isso aqui nao vai dar confusao nos dados na hora de inserir uma nova pessoa	
-	// Testar se isso aqui vai dar certo
 	*qtd_pessoas -= 1;
 }

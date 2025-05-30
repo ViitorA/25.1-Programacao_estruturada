@@ -69,6 +69,21 @@ void imprimir_dados(Pessoa pessoa) {
 	printf("====================\n");
 }
 
+void imprimir_agenda_parcialmente(Pessoa *agenda, int qtd_pessoas) {
+	for (int i = 0; i < qtd_pessoas; i++) {
+		printf("====================\n");
+		printf("Nome: %s\n", agenda[i].nome);
+		printf("E-Mail: %s\n", agenda[i].email);
+		printf("Número de Telefone: %s %s\n", agenda[i].telefone.ddd, agenda[i].telefone.numero);
+		printf("====================\n");
+	}
+}
+
+void imprimir_agenda_completa(Pessoa *agenda, int qtd_pessoas) {
+	for (int i = 0; i < qtd_pessoas; i++) {
+		imprimir_dados(agenda[i]);
+	}
+}
 
 void buscar_nome(char *nome, Pessoa *agenda) {
 	for(int i = 0; i < 100; i++) {
@@ -95,40 +110,54 @@ void buscar_dia_mes(int dia, int mes, Pessoa *agenda) {
 }
 
 /* TODO: inserir em ordem alfabética */
-void inserir_pessoa(Pessoa *agenda) {
+void inserir_pessoa(Pessoa *agenda, int *qtd_pessoas) {
 	String nome;
 
 	puts("Inserir nome: ");
 	scanf("%s", nome);	
 	
+	int posicao = *qtd_pessoas; // Assume que será inserido no final
+
 	// Verificar onde inserir
+	for (int i = 0; i < *qtd_pessoas; i++) {
+		if( strcmp(nome, agenda[i].nome) < 0 ) { 
+			posicao = i;
+			break;	
+		}	
+	}
+
+	for (int i = *qtd_pessoas; i > posicao; i--) {
+		agenda[i] = agenda[i - 1]; // desloca os nomes posteriores para a direita
+	}
+	
+	strcpy(agenda[posicao].nome, nome);
 
 	puts("Inserir E-Mail: ");
-	scanf("%s", agenda[i].email);
+	scanf("%s", agenda[posicao].email);
 
 	puts("Inserir CEP: ");
-	scanf("%s", agenda[i].endereco.cep);
+	scanf("%s", agenda[posicao].endereco.cep);
 
 	puts("Inserir Rua: ");
-	scanf("%s", agenda[i].endereco.rua);
+	scanf("%s", agenda[posicao].endereco.rua);
 
 	puts("Inserir número: ");
-	scanf("%d", &agenda[i].endereco.numero);
+	scanf("%d", &agenda[posicao].endereco.numero);
 
 	puts("Inserir complemento: ");
-	scanf("%s", agenda[i].endereco.complemento);
+	scanf("%s", agenda[posicao].endereco.complemento);
 
 	puts("Inserir bairro: ");
-	scanf("%s", agenda[i].endereco.bairro);
+	scanf("%s", agenda[posicao].endereco.bairro);
 
 	puts("Inserir cidade: ");
-	scanf("%s", agenda[i].endereco.cidade);
+	scanf("%s", agenda[posicao].endereco.cidade);
 
 	puts("Inserir estado: ");
-	scanf("%s", agenda[i].endereco.estado);
+	scanf("%s", agenda[posicao].endereco.estado);
 
 	puts("Inserir País: ");
-	scanf("%s", agenda[i].endereco.pais);
+	scanf("%s", agenda[posicao].endereco.pais);
 
 	// Limpa o buffer
 	while (getchar() != '\n');
@@ -136,16 +165,44 @@ void inserir_pessoa(Pessoa *agenda) {
 	puts("Insira o número de telefone no formato \"dd nnnnnnnnn\"");
 	char telefone_str[12];
 	fgets(telefone_str, sizeof(telefone_str), stdin);
-	sscanf(telefone_str, "%2s %9s", agenda[i].telefone.ddd, agenda[i].telefone.numero);
+	sscanf(telefone_str, "%2s %9s", agenda[posicao].telefone.ddd, agenda[posicao].telefone.numero);
 
 	// Limpa o buffer
 	while (getchar() != '\n');
 		
 	puts("Insira o aniversário no formado DD/MM/AAAA: ");
-	scanf("%d/%d/%d", &agenda[i].aniversario.dia, &agenda[i].aniversario.mes, &agenda[i].aniversario.ano);
+	scanf("%d/%d/%d", &agenda[posicao].aniversario.dia, &agenda[posicao].aniversario.mes, &agenda[posicao].aniversario.ano);
 
 
 	// Depois arrumar para poder aceitar nenhuma observação
 	puts("Insira alguma observação especial: ");
-	scanf("%s", agenda[i].observacoes);
+	scanf("%s", agenda[posicao].observacoes);
+
+	*qtd_pessoas += 1; // Fala que foi adicionado mais uma pessoa
+}
+
+void remover_pessoa(Pessoa *agenda, int *qtd_pessoas, char *nome) {
+	int posicao = -1;
+
+	for(int i = 0; i < *qtd_pessoas; i++) {
+		if (strcmp(agenda[i].nome, nome) == 0) {
+			posicao = i;	
+			break;
+		}
+	}
+
+	if (posicao == -1) {
+		puts("Pessoa não encontrada na agenda!");
+		return;
+	}
+
+		
+	// Desloca os elementos p/a a esquerda
+	for( int i = posicao; i < (*qtd_pessoas) - 1; i++) {
+		agenda[i] = agenda[i + 1];
+	}
+	
+	// To assumindo que isso aqui nao vai dar confusao nos dados na hora de inserir uma nova pessoa	
+	// Testar se isso aqui vai dar certo
+	*qtd_pessoas -= 1;
 }
